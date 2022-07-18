@@ -32,7 +32,7 @@ const LogIn: NextPage = () => {
     });
   };
   useEffect(() => {
-    if (data?.ok) {
+    if (data && data.ok) {
       router.push('/');
     }
   }, [data, router]);
