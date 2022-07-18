@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import useSWR from 'swr';
+import useMe from '../libs/client/useMe';
 import { GetMyProfileResponse } from '../types';
 import LeftNav from './LeftNav';
 import RightNav from './RightNav';
@@ -13,12 +14,12 @@ interface LayoutProps {
 
 export default function Layout({ pageTitle, children }: LayoutProps) {
   const router = useRouter();
-  const { data } = useSWR<GetMyProfileResponse>('/api/users/me');
+  const { myProfile, isLoading } = useMe();
   useEffect(() => {
-    if (!data?.ok) {
+    if (!myProfile && !isLoading) {
       router.push('/log-in');
     }
-  }, [data, router]);
+  }, [myProfile, isLoading, router]);
   return (
     <div className='text-zinc-200 grid md:grid-cols-[1fr_1fr_1fr] sm:grid-cols-[1fr_2fr] divide-zinc-700 divide-x-[1px] '>
       <Head>

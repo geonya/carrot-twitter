@@ -7,6 +7,8 @@ interface MeResponse {
 }
 
 export default function useMe() {
-  const { data, error } = useSWR<MeResponse>('/api/users/me');
-  return { myProfile: data?.myProfile, isLoading: !data && !error };
+  const { data, error } = useSWR<MeResponse>(
+    typeof window === 'undefined' ? null : '/api/users/me'
+  );
+  return { myProfile: data?.myProfile, isLoading: !data?.ok && !error };
 }
