@@ -24,35 +24,35 @@ const Home: NextPage = () => {
   );
 };
 
-// const Page: NextPage<{ tweets: Tweet[] }> = ({ tweets }) => {
-//   return (
-//     <SWRConfig
-//       value={{
-//         fallback: {
-//           '/api/tweets': {
-//             ok: true,
-//             tweets,
-//           },
-//         },
-//       }}
-//     >
-//       <Home />
-//     </SWRConfig>
-//   );
-// };
+const Page: NextPage<{ tweets: Tweet[] }> = ({ tweets }) => {
+  return (
+    <SWRConfig
+      value={{
+        fallback: {
+          '/api/tweets': {
+            ok: true,
+            tweets,
+          },
+        },
+      }}
+    >
+      <Home />
+    </SWRConfig>
+  );
+};
 
-// export async function getStaticProps() {
-//   console.log('building statically');
-//   const tweets = await prisma.tweet.findMany({
-//     include: { user: true },
-//     orderBy: { createdAt: 'desc' },
-//   });
-//   return {
-//     props: {
-//       tweets: JSON.parse(JSON.stringify(tweets)),
-//     },
-//     revalidate: 10,
-//   };
-// }
+export async function getStaticProps() {
+  console.log('building statically');
+  const tweets = await prisma.tweet.findMany({
+    include: { user: true },
+    orderBy: { createdAt: 'desc' },
+  });
+  return {
+    props: {
+      tweets: JSON.parse(JSON.stringify(tweets)),
+    },
+    revalidate: 10,
+  };
+}
 
-export default Home;
+export default Page;

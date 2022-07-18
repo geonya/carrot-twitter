@@ -1,7 +1,4 @@
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import useMe from '../libs/client/useMe';
 
 interface LayoutProps {
   pageTitle?: string;
@@ -10,13 +7,13 @@ interface LayoutProps {
 
 export default function AuthLayout({ pageTitle, children }: LayoutProps) {
   return (
-    <div className='text-white grid lg:grid-cols-[4fr_3fr] divide-zinc-700 divide-x-[1px]'>
+    <div className='text-white grid md:grid-cols-[4fr_3fr] min-w-[375px] divide-zinc-700 divide-x-[1px]'>
       <Head>
         <title>
           {pageTitle ? `${pageTitle} | 당근 트위터` : '당근 트위터'}
         </title>
       </Head>
-      <div className='h-screen w-full flex justify-center items-start lg:order-2 min-w-[640px] shrink-0 flex-col p-12'>
+      <div className='h-screen w-full flex justify-center items-start lg:order-2 min-w-[375px] flex-col p-12'>
         {children}
       </div>
       <div className="w-full h-screen bg-[url('https://abs.twimg.com/sticky/illustrations/lohp_1302x955.png')] flex justify-center items-center lg:order-1 shrink">

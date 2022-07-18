@@ -18,10 +18,11 @@ async function handler(
       const user = await prisma.user.findUnique({
         where: { username: username.toString() },
       });
+      if (!user) return res.json({ ok: false, error: 'User Not Found.' });
       return res.json({ ok: true, user });
     } catch (error) {
       console.error(error);
-      return res.json({ ok: false, error: 'User not found' });
+      return res.json({ ok: false, error: 'Find Error' });
     }
   }
   if (req.method === 'POST') {

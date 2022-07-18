@@ -1,12 +1,11 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-
-import { AnimatePresence, motion } from 'framer-motion';
 import { GetTweetsResponse } from '../types';
 import useMe from '../libs/client/useMe';
 import useMutation from '../libs/client/useMutation';
 import WritingBox from './WritingBox';
+import ToggleWritingBoxContainer from './ToggleWritingBoxContainer';
 
 interface LeftNavProps {
   data?: GetTweetsResponse;
@@ -30,12 +29,12 @@ export default function LeftNav({ data }: LeftNavProps) {
     }
   }, [logoutResult, loading, router]);
   return (
-    <nav className='w-full flex justify-end items-center h-full'>
-      <ul className='flex flex-col items-center space-y-8 mr-14'>
+    <nav className='sm:w-full flex sm:justify-end justify-center items-center h-full'>
+      <ul className='flex flex-col items-center space-y-8 sm:mr-14 mr-0'>
         <Link href={'/'}>
           <li className='px-5 py-2 justify-center flex items-center space-x-4 cursor-pointer border border-transparent hover:border hover:border-zinc-700 hover:rounded-full'>
             <svg
-              className='w-9 h-9'
+              className='w-7 h-7'
               fill='currentColor'
               viewBox='0 0 20 20'
               xmlns='http://www.w3.org/2000/svg'
@@ -50,7 +49,7 @@ export default function LeftNav({ data }: LeftNavProps) {
         <Link href={'/search'}>
           <li className='px-5 py-2 justify-center flex items-center space-x-4 cursor-pointer border border-transparent hover:border hover:border-zinc-700 hover:rounded-full'>
             <svg
-              className='w-9 h-9'
+              className='w-7 h-7'
               fill='none'
               stroke='currentColor'
               viewBox='0 0 24 24'
@@ -71,7 +70,7 @@ export default function LeftNav({ data }: LeftNavProps) {
         <Link href={`/users/${myData?.myProfile?.username}`}>
           <li className='px-5 py-2 flex justify-center items-center space-x-4 cursor-pointer border border-transparent hover:border hover:border-zinc-700 hover:rounded-full'>
             <svg
-              className='w-9 h-9'
+              className='w-7 h-7'
               fill='none'
               stroke='currentColor'
               viewBox='0 0 24 24'
@@ -95,54 +94,11 @@ export default function LeftNav({ data }: LeftNavProps) {
         >
           <span className='md:text-base text-sm font-semibold'>Tweet</span>
         </li>
-        <AnimatePresence>
-          {writingModal && (
-            <div className='absolute left-0 -top-10 w-full h-full z-10 flex items-center justify-center'>
-              <motion.div
-                onClick={() => setWritingModal(false)}
-                className='absolute left-0 top-0 w-screen h-screen bg-[rgba(0,0,0,0.3)] z-20'
-                initial={{ opacity: 0 }}
-                animate={{
-                  opacity: 1,
-                  transition: { type: 'tween' },
-                }}
-                exit={{ opacity: 0 }}
-              />
-              <motion.div
-                className='absolute z-30 px-2 py-7 rounded-xl bg-zinc-900'
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{
-                  scale: 1,
-                  opacity: 1,
-                  transition: { type: 'tween' },
-                }}
-                exit={{ scale: 0, opacity: 0 }}
-              >
-                <div
-                  className='absolute top-3 left-3 hover:border border-zinc-600 p-1 rounded-full cursor-pointer'
-                  onClick={() => setWritingModal(false)}
-                >
-                  <svg
-                    className='w-6 h-6'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth='2'
-                      d='M6 18L18 6M6 6l12 12'
-                    ></path>
-                  </svg>
-                </div>
-                <div className='w-full h-7' />
-                <WritingBox data={data} setWritingModal={setWritingModal} />
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
+        <ToggleWritingBoxContainer
+          data={data}
+          writingModal={writingModal}
+          setWritingModal={setWritingModal}
+        />
         <li
           className='w-36 py-2 border-2 border-blue-500 rounded-full text-center cursor-pointer'
           onClick={onLogoutClick}

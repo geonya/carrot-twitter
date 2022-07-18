@@ -1,6 +1,9 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import LeftNav from './LeftNav';
 import RightNav from './RightNav';
+import ToggleMenu from './ToggleMenu';
 
 interface LayoutProps {
   pageTitle?: string;
@@ -8,6 +11,8 @@ interface LayoutProps {
 }
 
 export default function Layout({ pageTitle, children }: LayoutProps) {
+  const router = useRouter();
+  const [toggleMenuOn, setToggleMenuOn] = useState(false);
   return (
     <div className='text-zinc-200 grid md:grid-cols-[1fr_1fr_1fr] sm:grid-cols-[1fr_2fr] divide-zinc-700 divide-x-[1px] '>
       <Head>
@@ -18,7 +23,50 @@ export default function Layout({ pageTitle, children }: LayoutProps) {
       <div className='sm:block hidden'>
         <LeftNav />
       </div>
-      <div className='min-w-[375px] h-screen overflow-scroll'>{children}</div>
+      <div className='min-w-[375px] h-screen overflow-scroll'>
+        <div className='sm:hidden w-full min-h-[60px] flex items-center justify-between px-5'>
+          <span className='cursor-pointer p-1 ' onClick={() => router.back()}>
+            <svg
+              className='w-8 h-8'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                d='M15 19l-7-7 7-7'
+              ></path>
+            </svg>
+          </span>
+          <span
+            className='cursor-pointer p-1'
+            onClick={() => setToggleMenuOn((prev) => !prev)}
+          >
+            <svg
+              className='w-8 h-8'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='2'
+                d='M4 6h16M4 12h16m-7 6h7'
+              ></path>
+            </svg>
+          </span>
+          <ToggleMenu
+            toggleMenuOn={toggleMenuOn}
+            setToggleMenuOn={setToggleMenuOn}
+          />
+        </div>
+        {children}
+      </div>
       <div className='md:block hidden'>
         <RightNav />
       </div>

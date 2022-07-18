@@ -14,6 +14,9 @@ export default function TweetPage() {
   const router = useRouter();
   const { data } = useSWR<GetTweetProps>(`/api/tweets/${router.query.id}`);
   return (
-    <Layout pageTitle='Tweet'>{data && <TweetBox {...data.tweet} />}</Layout>
+    <Layout pageTitle='Tweet'>
+      <div className='h-8' />
+      {data && <TweetBox {...data.tweet} />}
+    </Layout>
   );
 }

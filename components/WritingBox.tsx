@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import useMe from '../libs/client/useMe';
 import useMutation from '../libs/client/useMutation';
 import { GetTweetsResponse, ITweet, TweetFormValue } from '../types';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import AvatarContainer from './AvatarContainer';
 import TweetPhoto from './TweetPhoto';
 import uploadFunction from '../libs/client/uploadFunction';
@@ -28,7 +28,7 @@ interface UploadTweetResponse {
 
 export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
   const { data: myData } = useMe();
-  const { register, handleSubmit, setValue, watch, getValues } =
+  const { register, handleSubmit, setValue, watch, getValues, reset } =
     useForm<TweetFormValue>({
       mode: 'onChange',
     });
@@ -42,7 +42,6 @@ export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
     if (loading) return;
     if (!data || !data.tweets) return;
     if (!myData?.myProfile) return;
-    console.log('upload');
     // new tweet obj
     const newTweetObj = {
       id: data.tweets.length + 1,
@@ -61,6 +60,7 @@ export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
     if (setWritingModal) {
       setWritingModal(false);
     }
+    reset();
   };
   useEffect(() => {
     if (fileWatch && fileWatch.length > 0) {
@@ -123,7 +123,9 @@ export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
               }}
             />
           </div>
-          {uploadPhoto !== '' ? <TweetPhoto url={uploadPhoto} /> : null}
+          <AnimatePresence>
+            {uploadPhoto !== '' ? <TweetPhoto url={uploadPhoto} /> : null}
+          </AnimatePresence>
           <div className='mt-1 w-full min-h-[50px] flex justify-between items-center px-5'>
             <div className='text-blue-500 flex'>
               <label>

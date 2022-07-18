@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form';
 import useSWR, { useSWRConfig } from 'swr';
 import AvatarContainer from '../../components/AvatarContainer';
 import Layout from '../../components/Layout';
+import Loading from '../../components/Loading';
+import NotFound from '../../components/NotFound';
 import { BUCKET_URL } from '../../libs/client/constants';
 import useMe from '../../libs/client/useMe';
 import useMutation from '../../libs/client/useMutation';
@@ -118,10 +120,10 @@ export default function Profile() {
   }, [fileWatch]);
   return (
     <Layout pageTitle='My Profile'>
-      {!data?.user ? (
-        <div className='w-full h-screen grid place-content-center'>
-          <h1 className='font-bold text-3xl'>User Not Found...</h1>
-        </div>
+      {!data ? (
+        <Loading />
+      ) : !data.ok || !data.user ? (
+        <NotFound />
       ) : (
         <div className='w-full flex justify-center items-center h-screen'>
           <div className='min-h-[500px] flex flex-col items-center space-y-8 w-full'>

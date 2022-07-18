@@ -30,14 +30,13 @@ const LogIn: NextPage = () => {
     loginMutation({
       ...data,
     });
-    router.push('/');
   };
   useEffect(() => {
     if (data?.ok) {
       if (loading) return;
       router.push('/');
     }
-  });
+  }, [data, router]);
   return (
     <AuthLayout pageTitle='로그인'>
       <div className='space-y-14'>
@@ -48,8 +47,10 @@ const LogIn: NextPage = () => {
             </g>
           </svg>
         </div>
-        <h1 className='text-6xl font-bold'>지금 일어나고 있는 일</h1>
-        <h4 className='text-3xl font-bold'>
+        <h1 className='xl:text-5xl lg:text-4xl md:text-4xl sm:text-4xl text-4xl font-semibold'>
+          지금 일어나고 있는 일
+        </h1>
+        <h4 className='text-2xl font-bold'>
           오늘 당근 🥕 트위터에 가입하세요.
         </h4>
       </div>
@@ -58,20 +59,20 @@ const LogIn: NextPage = () => {
         onSubmit={handleSubmit(onValid)}
       >
         <input
-          className='w-3/5 px-5 py-2 rounded-full'
+          className='w-5/6 max-w-[340px] px-5 py-2 rounded-full'
           type='text'
           {...register('username', { required: 'Please Write username' })}
           placeholder='Username'
         />
         <input
-          className='w-3/5 px-5 py-2 rounded-full'
+          className='w-5/6 max-w-[340px] px-5 py-2 rounded-full'
           type='password'
           {...register('password', { required: 'Please Write password' })}
           autoComplete='on'
           placeholder='Password'
         />
         <input
-          className='w-3/5 px-5 py-2 rounded-full bg-blue-500 text-white cursor-pointer'
+          className='w-5/6 max-w-[340px] px-5 py-2 rounded-full bg-blue-500 text-white cursor-pointer'
           type='submit'
           value={loading ? 'Loading...' : '로그인'}
         />
@@ -79,7 +80,7 @@ const LogIn: NextPage = () => {
       <div className='w-full mt-10 space-y-5'>
         <h4 className='text-white font-bold'>처음 이신가요?</h4>
         <Link href='/create-account'>
-          <div className='w-3/5 px-5 py-2 rounded-full border border-blue-500 text-blue-500 cursor-pointer text-center'>
+          <div className='w-5/6 max-w-[340px] px-5 py-2 rounded-full border border-blue-500 text-blue-500 cursor-pointer text-center'>
             <span>가입하기</span>
           </div>
         </Link>
