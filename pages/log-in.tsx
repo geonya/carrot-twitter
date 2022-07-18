@@ -59,20 +59,20 @@ const LogIn: NextPage = () => {
         onSubmit={handleSubmit(onValid)}
       >
         <input
-          className='w-5/6 max-w-[340px] px-5 py-2 rounded-full'
+          className='auth-input'
           type='text'
           {...register('username', { required: 'Please Write username' })}
           placeholder='Username'
         />
         <input
-          className='w-5/6 max-w-[340px] px-5 py-2 rounded-full'
+          className='auth-input'
           type='password'
           {...register('password', { required: 'Please Write password' })}
           autoComplete='on'
           placeholder='Password'
         />
         <input
-          className='w-5/6 max-w-[340px] px-5 py-2 rounded-full bg-blue-500 text-white cursor-pointer'
+          className='auth-input bg-blue-500 text-white cursor-pointer'
           type='submit'
           value={loading ? 'Loading...' : '로그인'}
         />
@@ -80,7 +80,7 @@ const LogIn: NextPage = () => {
       <div className='w-full mt-10 space-y-5'>
         <h4 className='text-white font-bold'>처음 이신가요?</h4>
         <Link href='/create-account'>
-          <div className='w-5/6 max-w-[340px] px-5 py-2 rounded-full border border-blue-500 text-blue-500 cursor-pointer text-center'>
+          <div className='auth-input border border-blue-500 text-blue-500 cursor-pointer text-center'>
             <span>가입하기</span>
           </div>
         </Link>

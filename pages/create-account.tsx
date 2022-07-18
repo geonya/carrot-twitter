@@ -56,26 +56,26 @@ const CreateAccount: NextPage = () => {
         onSubmit={handleSubmit(onValid)}
       >
         <input
-          className='w-3/5 px-5 py-2 rounded-full'
+          className='auth-input'
           type='text'
           {...register('username', { required: 'Please Write username' })}
           placeholder='Username'
         />
         <input
-          className='w-3/5 px-5 py-2 rounded-full'
+          className='auth-input'
           type='text'
           {...register('email', { required: 'Please Write username' })}
           placeholder='E-Mail'
         />
         <input
-          className='w-3/5 px-5 py-2 rounded-full'
+          className='auth-input'
           type='password'
           {...register('password', { required: 'Please Write password' })}
           placeholder='Password'
           autoComplete='on'
         />
         <input
-          className='w-3/5 px-5 py-2 rounded-full bg-blue-500 text-white cursor-pointer'
+          className='auth-input bg-blue-500 text-white cursor-pointer'
           type='submit'
           value={loading ? 'Loading...' : '가입하기'}
         />
@@ -83,7 +83,7 @@ const CreateAccount: NextPage = () => {
       <div className='w-full mt-10 space-y-5'>
         <h4 className='text-white font-bold'>이미 트위터에 가입하셨나요?</h4>
         <Link href='/log-in'>
-          <div className='w-3/5 px-5 py-2 rounded-full border border-blue-500 text-blue-500 cursor-pointer text-center'>
+          <div className='auth-input border border-blue-500 text-blue-500 cursor-pointer text-center'>
             <span>로그인</span>
           </div>
         </Link>
