@@ -9,6 +9,9 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<MutationResponseType>
 ) {
+  if (req.method === 'GET') {
+    console.log('GET');
+  }
   if (req.method === 'POST') {
     try {
       const {
@@ -18,6 +21,7 @@ async function handler(
       if (!user) {
         return res.json({ ok: false, error: 'User not found' });
       }
+
       const passwordOk = await bcrypt.compare(password, user.password);
       if (!passwordOk) {
         return res.json({ ok: false, error: 'Wrong Passwrod' });
@@ -25,6 +29,7 @@ async function handler(
       req.session.user = {
         id: user.id,
       };
+
       await req.session.save();
       return res.json({ ok: true });
     } catch (error) {
@@ -35,5 +40,5 @@ async function handler(
 }
 
 export default withApiSession(
-  withHandler({ methods: ['POST'], handler, isPrivate: false })
+  withHandler({ methods: ['POST', 'GET'], handler, isPrivate: false })
 );

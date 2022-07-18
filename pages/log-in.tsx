@@ -30,12 +30,14 @@ const LogIn: NextPage = () => {
     loginMutation({
       ...data,
     });
+    router.push('/');
   };
   useEffect(() => {
-    if (data && data.ok) {
+    if (data?.ok) {
+      if (loading) return;
       router.push('/');
     }
-  }, [data, router]);
+  });
   return (
     <AuthLayout pageTitle='로그인'>
       <div className='space-y-14'>

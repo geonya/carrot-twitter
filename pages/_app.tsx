@@ -1,4 +1,7 @@
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { SWRConfig } from 'swr';
+import useMe from '../libs/client/useMe';
 import '../styles.css';
 
 export default function App({ Component, pageProps }: any) {

@@ -1,4 +1,7 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import useMe from '../libs/client/useMe';
 
 interface LayoutProps {
   pageTitle?: string;
