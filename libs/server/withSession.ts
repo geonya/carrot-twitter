@@ -11,7 +11,6 @@ declare module 'iron-session' {
 const cookieOptions = {
   cookieName: 'carrottwitter',
   password: process.env.COOKIE_PW!,
-  secure: process.env.NODE_ENV === 'production',
 };
 
 export function withApiSession(fn: any) {
