@@ -3,6 +3,7 @@ import useSWR from 'swr';
 
 interface MeResponse {
   ok: boolean;
+  error?: string;
   myProfile: User;
 }
 
@@ -10,5 +11,5 @@ export default function useMe() {
   const { data, error } = useSWR<MeResponse>(
     typeof window === 'undefined' ? null : '/api/users/me'
   );
-  return { myProfile: data?.myProfile, isLoading: !data?.ok && !error };
+  return { data, error };
 }

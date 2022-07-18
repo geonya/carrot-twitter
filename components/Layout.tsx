@@ -14,12 +14,13 @@ interface LayoutProps {
 
 export default function Layout({ pageTitle, children }: LayoutProps) {
   const router = useRouter();
-  const { myProfile, isLoading } = useMe();
+  const { data } = useMe();
+
   useEffect(() => {
-    if (!myProfile && !isLoading) {
+    if (data && !data.ok) {
       router.push('/log-in');
     }
-  }, [myProfile, isLoading, router]);
+  }, [data, router]);
   return (
     <div className='text-zinc-200 grid md:grid-cols-[1fr_1fr_1fr] sm:grid-cols-[1fr_2fr] divide-zinc-700 divide-x-[1px] '>
       <Head>

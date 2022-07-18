@@ -36,7 +36,7 @@ export default function Profile() {
   });
   const fileWatch = watch('file');
   const router = useRouter();
-  const myData = useMe();
+  const { data: myData } = useMe();
   const [isMe, setIsMe] = useState(false);
   const [previewAvatar, setPreviewAvatar] = useState('');
 

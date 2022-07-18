@@ -27,7 +27,7 @@ interface UploadTweetResponse {
 }
 
 export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
-  const { myProfile } = useMe();
+  const { data: myData } = useMe();
   const { register, handleSubmit, setValue, watch, getValues } =
     useForm<TweetFormValue>({
       mode: 'onChange',
@@ -41,7 +41,7 @@ export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
   const onSubmitValid = async ({ tweetText }: TweetFormValue) => {
     if (loading) return;
     if (!data || !data.tweets) return;
-    if (!myProfile) return;
+    if (!myData?.myProfile) return;
     console.log('upload');
     // new tweet obj
     const newTweetObj = {
@@ -50,9 +50,9 @@ export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
       photo: uploadPhoto,
       likeCount: 0,
       user: {
-        id: myProfile.id,
-        username: myProfile.username,
-        avatar: myProfile.avatar,
+        id: myData.myProfile.id,
+        username: myData.myProfile.username,
+        avatar: myData.myProfile.avatar,
       },
     };
     await uploadFunction({ data, newTweetObj, uploadTweet, fileWatch });
@@ -98,7 +98,7 @@ export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
         onSubmit={handleSubmit(onSubmitValid)}
       >
         <div>
-          <AvatarContainer url={myProfile?.avatar} />
+          <AvatarContainer url={myData?.myProfile?.avatar} />
         </div>
         <div className='w-full'>
           <div className='flex items-center mb-4'>

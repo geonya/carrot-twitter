@@ -14,7 +14,7 @@ interface LeftNavProps {
 
 export default function LeftNav({ data }: LeftNavProps) {
   const router = useRouter();
-  const myData = useMe();
+  const { data: myData } = useMe();
   const [logout, { data: logoutResult, loading }] =
     useMutation(`/api/users/log-out`);
   const [writingModal, setWritingModal] = useState(false);
@@ -68,7 +68,7 @@ export default function LeftNav({ data }: LeftNavProps) {
             </span>
           </li>
         </Link>
-        <Link href={`/users/${myData.myProfile?.username}`}>
+        <Link href={`/users/${myData?.myProfile?.username}`}>
           <li className='px-5 py-2 flex justify-center items-center space-x-4 cursor-pointer border border-transparent hover:border hover:border-zinc-700 hover:rounded-full'>
             <svg
               className='w-9 h-9'
