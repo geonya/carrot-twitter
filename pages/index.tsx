@@ -9,6 +9,7 @@ import prisma from '../libs/server/prisma';
 
 const Home: NextPage = () => {
   const { data } = useSWR<GetTweetsResponse>('/api/tweets');
+
   return (
     <Layout pageTitle='Home'>
       <div className='divide-zinc-700 divide-y-[1px]'>

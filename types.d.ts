@@ -16,3 +16,8 @@ export interface GetTweetsResponse {
   ok: boolean;
   tweets: ITweet[];
 }
+
+export interface GetMyProfileResponse {
+  ok: boolean;
+  myProfile?: User;
+}
