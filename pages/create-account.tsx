@@ -80,7 +80,7 @@ const CreateAccount: NextPage = () => {
               message: '2~10자 이내에 영문이나 숫자만 사용 가능합니다.',
             },
             pattern: {
-              value: /^[a-z0-9]{2,10}$/g,
+              value: /^[a-zA-Z0-9]{2,10}$/g,
               message: '2~10자 이내에 영문이나 숫자만 사용 가능합니다.',
             },
             onChange: () => clearErrors('result'),
