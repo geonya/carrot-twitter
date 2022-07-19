@@ -6,7 +6,7 @@ import AvatarContainer from './AvatarContainer';
 import TweetPhoto from './TweetPhoto';
 import { Tweet } from '@prisma/client';
 import Loading from './Loading';
-import { ITweet } from '../types';
+import { GetTweetResponse, ITweet } from '../types';
 
 interface TweetProps {
   id: number;
@@ -19,11 +19,6 @@ interface TweetProps {
   photo?: string | null;
   likeCount?: number;
 }
-interface GetTweetMutation {
-  ok: boolean;
-  tweet: ITweet;
-  isLiked: boolean;
-}
 
 export default function TweetBox({
   id,
@@ -33,7 +28,7 @@ export default function TweetBox({
   photo,
   likeCount,
 }: TweetProps) {
-  const { data, mutate: tweetMutate } = useSWR<GetTweetMutation>(
+  const { data, mutate: tweetMutate } = useSWR<GetTweetResponse>(
     `/api/tweets/${id}`
   );
   const [likeMutation] = useMutation(`/api/tweets/${id}/like`);

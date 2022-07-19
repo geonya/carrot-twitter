@@ -4,7 +4,16 @@ interface MutationResponseType {
   ok: boolean;
   [key: string]: any;
 }
-interface ITweet extends Tweet {
+interface ITweet {
+  id: number;
+  tweetText: string;
+  photo: string | null;
+  userId: number;
+  likeCount: number;
+  originTweetId: number | null;
+  reTweetCount: number;
+  createdAt: Date;
+  updatedAt: Date;
   user?: User;
   _count: {
     reTweets: number;

@@ -38,7 +38,7 @@ const Search: NextPage = () => {
     if (data?.error) {
       setError(data.error);
     }
-  }, [data]);
+  }, [data, setError]);
   return (
     <Layout pageTitle='Search'>
       <div className=''>
