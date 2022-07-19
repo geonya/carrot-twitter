@@ -29,6 +29,7 @@ async function handler(
           },
         },
       });
+      if (!tweet) return res.json({ ok: false, error: 'no tweet' });
 
       const isLiked = Boolean(
         await prisma.like.findFirst({

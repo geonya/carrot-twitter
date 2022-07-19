@@ -15,17 +15,21 @@ export default function TweetPage() {
   );
   return (
     <Layout pageTitle='Tweet'>
-      <div className='divide-y-[0.5px] divide-dashed divide-zinc-700'>
-        {data ? <TweetBox {...data.tweet} /> : <Loading />}
-        {reTweetsData && reTweetsData.tweets ? (
-          <WritingBox originTweetData={data} reTweet />
-        ) : (
-          <Loading />
-        )}
-        {data && reTweetsData && (
-          <TweetsListContainer tweets={reTweetsData.tweets} reTweet />
-        )}
-      </div>
+      {data ? (
+        <div className='divide-y-[0.5px] divide-dashed divide-zinc-700'>
+          <TweetBox {...data.tweet} />
+          {reTweetsData && reTweetsData.tweets ? (
+            <>
+              <WritingBox originTweetData={data} reTweet />
+              <TweetsListContainer tweets={reTweetsData.tweets} reTweet />
+            </>
+          ) : (
+            <Loading />
+          )}
+        </div>
+      ) : (
+        <Loading />
+      )}
     </Layout>
   );
 }

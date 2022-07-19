@@ -17,31 +17,87 @@ export default async function tweetUploadFn({
   uploadTweet,
 }: uploadFunctionProps) {
   if (!newTweetObj.tweetText) return;
+  if (fileWatch && fileWatch.length > 0) {
+    const file = fileWatch[0];
+    const {
+      data: { url, objectName },
+    } = await axios.post('/api/upload', {
+      name: file.name,
+      type: file.type,
+    });
+    await axios.put(url, file, {
+      headers: {
+        'Content-type': file.type,
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+    const photo = BUCKET_URL + objectName;
+    uploadTweet({
+      tweetText: newTweetObj.tweetText,
+      photo,
+      ...(newTweetObj.originTweetId && {
+        originTweetId: newTweetObj.originTweetId,
+      }),
+    });
+  } else {
+    uploadTweet({
+      tweetText: newTweetObj.tweetText,
+      ...(newTweetObj.originTweetId && {
+        originTweetId: newTweetObj.originTweetId,
+      }),
+    });
+  }
 
-  await mutate(
-    '/api/tweets',
-    (prev: GetTweetsResponse) => ({
-      ...prev,
-      tweets: [newTweetObj, ...prev.tweets],
-    }),
-    false
-  );
-  await mutate(
-    `/api/tweets/${newTweetObj.id}`,
-    {
-      ok: true,
-      isLiked: false,
-      tweet: newTweetObj,
-    },
-    false
-  );
   if (newTweetObj.originTweetId) {
     await mutate(
       `/api/tweets/${newTweetObj.originTweetId}/re-tweets`,
-      (prev: GetTweetsResponse) => ({
-        ...prev,
-        tweets: [newTweetObj, ...prev.tweets],
-      }),
+      (prev: GetTweetsResponse) => {
+        if (prev) {
+          return {
+            ...prev,
+            tweets: [newTweetObj, ...prev.tweets],
+          };
+        }
+        return {
+          ok: true,
+          tweets: [newTweetObj],
+        };
+      },
+      false
+    );
+    await mutate(
+      `/api/tweets/${newTweetObj.id}`,
+      {
+        ok: true,
+        isLiked: false,
+        tweet: newTweetObj,
+      },
+      false
+    );
+  } else {
+    await mutate(
+      '/api/tweets',
+      (prev: GetTweetsResponse) => {
+        if (prev) {
+          return {
+            ...prev,
+            tweets: [newTweetObj, ...prev.tweets],
+          };
+        }
+        return {
+          ok: true,
+          tweets: [newTweetObj],
+        };
+      },
+      false
+    );
+    await mutate(
+      `/api/tweets/${newTweetObj.id}`,
+      {
+        ok: true,
+        isLiked: false,
+        tweet: newTweetObj,
+      },
       false
     );
   }
@@ -79,34 +135,4 @@ export default async function tweetUploadFn({
     },
     false
   );
-  if (fileWatch && fileWatch.length > 0) {
-    const file = fileWatch[0];
-    const {
-      data: { url, objectName },
-    } = await axios.post('/api/upload', {
-      name: file.name,
-      type: file.type,
-    });
-    await axios.put(url, file, {
-      headers: {
-        'Content-type': file.type,
-        'Access-Control-Allow-Origin': '*',
-      },
-    });
-    const photo = BUCKET_URL + objectName;
-    uploadTweet({
-      tweetText: newTweetObj.tweetText,
-      photo,
-      ...(newTweetObj.originTweetId && {
-        originTweetId: newTweetObj.originTweetId,
-      }),
-    });
-  } else {
-    uploadTweet({
-      tweetText: newTweetObj.tweetText,
-      ...(newTweetObj.originTweetId && {
-        originTweetId: newTweetObj.originTweetId,
-      }),
-    });
-  }
 }

@@ -36,7 +36,6 @@ export default function TweetBox({
   const { data, mutate: tweetMutate } = useSWR<GetTweetMutation>(
     `/api/tweets/${id}`
   );
-
   const [likeMutation] = useMutation(`/api/tweets/${id}/like`);
   const onLikeClick = () => {
     if (!data) return;
@@ -54,7 +53,7 @@ export default function TweetBox({
     likeMutation({});
   };
 
-  return data && data.ok && data.tweet ? (
+  return data && data.tweet ? (
     <motion.div className='grid grid-cols-[1fr_10fr] gap-4 p-5 pl-6 pr-6 relative'>
       <Link href={`/users/${user?.username}`}>
         <div className='cursor-pointer'>

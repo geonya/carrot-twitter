@@ -143,7 +143,7 @@ export default function WritingBox({
               placeholder={
                 !reTweet
                   ? '무슨 일이 일어나고 있나요?'
-                  : '예쁜 의견 남겨주세요.'
+                  : '예쁜 의견 남겨주세요 😄'
               }
               rows={1}
               maxLength={140}

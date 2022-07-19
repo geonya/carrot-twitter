@@ -58,7 +58,7 @@ export default function LeftNav() {
           </li>
         </Link>
         <Link href={`/users/${myData?.myProfile?.username}`}>
-          <li className='w-36 py-2 flex justify-center items-center space-x-6 cursor-pointer border border-transparent hover:border hover:border-zinc-700 hover:rounded-full'>
+          <li className='w-36 py-2 flex justify-center items-center space-x-4 cursor-pointer border border-transparent hover:border hover:border-zinc-700 hover:rounded-full'>
             <svg
               className='w-7 h-7'
               fill='none'
