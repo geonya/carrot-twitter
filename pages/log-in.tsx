@@ -46,7 +46,7 @@ const LogIn: NextPage = () => {
     } else if (!data?.ok && data?.error) {
       setError('result', { message: data?.error });
     }
-  }, [data, router, loading]);
+  }, [data, router, loading, setError]);
 
   return (
     <AuthLayout pageTitle='로그인'>
