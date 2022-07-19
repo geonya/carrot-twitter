@@ -9,13 +9,12 @@ import prisma from '../libs/server/prisma';
 
 const Home: NextPage = () => {
   const { data } = useSWR<GetTweetsResponse>('/api/tweets');
-
   return (
     <Layout pageTitle='Home'>
-      <div className='divide-zinc-700 divide-y-[1px]'>
+      <div className='divide-zinc-700 divide-y-[0.5px] divide-dashed'>
         <div className='min-h-[200px]'>
           <h1 className='font-bold text-xl p-5'>Home</h1>
-          {data && <WritingBox data={data} />}
+          {data && data.tweets && <WritingBox tweets={data.tweets} />}
         </div>
         {/* Load All Tweets */}
         {data && <TweetsListContainer tweets={data.tweets} />}

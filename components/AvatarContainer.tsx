@@ -10,7 +10,7 @@ export default function AvatarContainer({ url, big }: AvatarContainerProps) {
     <div
       className={`${big ? 'w-32' : 'w-12'} ${
         big ? 'h-32' : 'h-12'
-      } bg-slate-400 rounded-full grid place-content-center`}
+      } bg-slate-400 rounded-full grid place-content-center p-1`}
     >
       <svg
         className={`${big ? 'w-20' : 'w-12'} ${

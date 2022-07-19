@@ -10,35 +10,36 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  email      String    @unique
-  username   String    @unique
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  username   String   @unique
   bio        String?
   avatar     String?
   password   String
   tweets     Tweet[]
-  followers  User[]    @relation("FollowRelation")
-  followings User[]    @relation("FollowRelation")
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  followers  User[]   @relation("FollowRelation")
+  followings User[]   @relation("FollowRelation")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
   likes      Like[]
-  comments   Comment[]
 }
 
 model Tweet {
-  id           Int       @id @default(autoincrement())
-  tweetText    String
-  photo        String?
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       Int
-  hashtags     HashTag[]
-  likeCount    Int       @default(0)
-  reTweetCount Int       @default(0)
-  commentCount Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  likes        Like[]
-  comments     Comment[]
+  id            Int       @id @default(autoincrement())
+  tweetText     String
+  photo         String?
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+  hashtags      HashTag[]
+  likeCount     Int       @default(0)
+  originTweet   Tweet?    @relation("reTweet", fields: [originTweetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  originTweetId Int?
+  reTweets      Tweet[]   @relation("reTweet")
+  reTweetCount  Int       @default(0)
+  likes         Like[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
 
   @@index([userId])
 }
@@ -59,25 +60,6 @@ model Like {
   userId    Int
   tweet     Tweet    @relation(fields: [tweetId], references: [id])
   tweetId   Int
-  comment   Comment  @relation(fields: [commentId], references: [id])
-  commentId Int
-
-  @@index([userId])
-  @@index([tweetId])
-  @@index([commentId])
-}
-
-model Comment {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  tweet     Tweet    @relation(fields: [tweetId], references: [id])
-  tweetId   Int
-  caption   String
-  likes     Like[]
-  likeCount Int      @default(0)
 
   @@index([userId])
   @@index([tweetId])

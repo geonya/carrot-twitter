@@ -54,13 +54,13 @@ export default function TweetBox({
   };
 
   return (
-    <motion.div className='grid grid-cols-[1fr_10fr] p-6 gap-4'>
+    <motion.div className='grid grid-cols-[1fr_10fr] gap-4 p-5 pl-6'>
       <Link href={`/users/${user?.username}`}>
         <div className='cursor-pointer'>
           <AvatarContainer url={user?.avatar} />
         </div>
       </Link>
-      <div className='flex flex-col'>
+      <div className='flex flex-col ml-1'>
         <div className='flex items-center justify-between mb-4'>
           <Link href={`/users/${user?.username}`}>
             <h4 className='font-bold text-base cursor-pointer'>
@@ -81,23 +81,25 @@ export default function TweetBox({
         </Link>
 
         <ul className='w-full flex items-center mt-5 space-x-5 text-zinc-500'>
-          <li className='flex space-x-2 items-center cursor-pointer'>
-            <svg
-              className='w-6 h-6'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'
-              ></path>
-            </svg>
-            <span>{data?.tweet?.commentCount}</span>
-          </li>
+          {!data?.tweet?.originTweetId && (
+            <li className='flex space-x-2 items-center cursor-pointer'>
+              <svg
+                className='w-6 h-6'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'
+                ></path>
+              </svg>
+              <span>{data?.tweet?.reTweetCount}</span>
+            </li>
+          )}
           <li
             className='flex space-x-2 items-center cursor-pointer'
             onClick={onLikeClick}

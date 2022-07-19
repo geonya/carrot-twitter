@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { mutate } from 'swr';
 import { GetHashTagsResponse } from '../../components/RightNav';
-import { GetTweetsResponse } from '../../types';
+import { ITweet } from '../../types';
 import { BUCKET_URL } from './constants';
 import { makeHashtagArrays } from './makeHashtag';
 
@@ -18,13 +18,13 @@ interface NewTweetObjType {
 }
 interface uploadFunctionProps {
   newTweetObj: NewTweetObjType;
-  data: GetTweetsResponse;
+  tweets: ITweet[];
   fileWatch?: FileList;
   uploadTweet: (data: any) => void;
 }
 
 export default async function uploadFunction({
-  data,
+  tweets,
   newTweetObj,
   fileWatch,
   uploadTweet,
@@ -32,8 +32,8 @@ export default async function uploadFunction({
   await mutate(
     '/api/tweets',
     {
-      ...data,
-      tweets: [newTweetObj, ...data?.tweets!],
+      ...{ ok: true, tweets },
+      tweets: [newTweetObj, ...tweets],
     },
     false
   );

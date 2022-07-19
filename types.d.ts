@@ -1,23 +1,29 @@
 import { Tweet, User } from '@prisma/client';
 
-export interface MutationResponseType {
+interface MutationResponseType {
   ok: boolean;
   [key: string]: any;
 }
-export interface ITweet extends Tweet {
+interface ITweet extends Tweet {
   user?: User;
 }
-export interface TweetFormValue {
+interface TweetFormValue {
   file?: FileList;
   tweetText: string;
 }
 
-export interface GetTweetsResponse {
+interface GetTweetsResponse {
   ok: boolean;
   tweets: ITweet[];
 }
 
-export interface GetMyProfileResponse {
+interface GetMyProfileResponse {
   ok: boolean;
   myProfile?: User;
+}
+
+interface UploadTweetResponse {
+  ok: boolean;
+  error?: string;
+  tweet: ITweet;
 }

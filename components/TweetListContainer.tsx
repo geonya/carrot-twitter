@@ -15,7 +15,7 @@ export default function TweetsListContainer({
 }: TweetsListContainerProps) {
   return (
     <motion.div
-      className='divide-zinc-700 divide-y-[1px]'
+      className='divide-zinc-700 divide-y-[0.5px] divide-dashed'
       variants={containerVariants}
       initial='start'
       animate='end'

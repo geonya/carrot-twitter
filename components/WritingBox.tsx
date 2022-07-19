@@ -9,42 +9,47 @@ import {
 import { useForm } from 'react-hook-form';
 import useMe from '../libs/client/useMe';
 import useMutation from '../libs/client/useMutation';
-import { GetTweetsResponse, ITweet, TweetFormValue } from '../types';
+import { ITweet, TweetFormValue, UploadTweetResponse } from '../types';
 import { AnimatePresence, motion } from 'framer-motion';
 import AvatarContainer from './AvatarContainer';
 import TweetPhoto from './TweetPhoto';
 import uploadFunction from '../libs/client/uploadFunction';
+import upLoadReTweetFn from '../libs/client/uploadReTweetFn';
 
 interface WritingBoxProps {
-  data?: GetTweetsResponse;
+  tweets?: ITweet[];
   setWritingModal?: Dispatch<SetStateAction<boolean>>;
+  reTweet?: boolean;
 }
 
-interface UploadTweetResponse {
-  ok: boolean;
-  error?: string;
-  tweet?: ITweet;
-}
-
-export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
+export default function WritingBox({
+  tweets,
+  setWritingModal,
+  reTweet = false,
+}: WritingBoxProps) {
   const { data: myData } = useMe();
   const { register, handleSubmit, setValue, watch, getValues, reset } =
     useForm<TweetFormValue>({
       mode: 'onChange',
     });
+
   const [uploadPhoto, setUploadPhoto] = useState('');
   const [uploadTweet, { loading }] =
     useMutation<UploadTweetResponse>('/api/tweets');
+
+  const { uploadReTweet, loading: reTweetLoading } = upLoadReTweetFn(
+    tweets?.length! + 1
+  );
 
   const fileWatch = watch('file');
 
   const onSubmitValid = async ({ tweetText }: TweetFormValue) => {
     if (loading) return;
-    if (!data || !data.tweets) return;
+    if (!tweets) return;
     if (!myData?.myProfile) return;
     // new tweet obj
     const newTweetObj = {
-      id: data.tweets.length + 1,
+      id: tweets.length + 1,
       tweetText,
       photo: uploadPhoto,
       likeCount: 0,
@@ -54,7 +59,12 @@ export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
         avatar: myData.myProfile.avatar,
       },
     };
-    await uploadFunction({ data, newTweetObj, uploadTweet, fileWatch });
+    await uploadFunction({
+      tweets,
+      newTweetObj,
+      uploadTweet,
+      fileWatch,
+    });
     setValue('tweetText', '');
     setUploadPhoto('');
     if (setWritingModal) {
@@ -98,7 +108,25 @@ export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
         onSubmit={handleSubmit(onSubmitValid)}
       >
         <div>
-          <AvatarContainer url={myData?.myProfile?.avatar} />
+          {!reTweet ? (
+            <AvatarContainer url={myData?.myProfile?.avatar} />
+          ) : (
+            <div className=''>
+              <svg
+                className='w-8 h-8 stroke-blue-500'
+                fill='none'
+                viewBox='0 0 24 24'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                ></path>
+              </svg>
+            </div>
+          )}
         </div>
         <div className='w-full'>
           <div className='flex items-center mb-4'>
@@ -169,7 +197,7 @@ export default function WritingBox({ data, setWritingModal }: WritingBoxProps) {
             <input
               className='bg-blue-500 px-6 py-1.5 rounded-full cursor-pointer font-bold text-sm'
               type='submit'
-              value='Tweet'
+              value={loading || reTweetLoading ? 'Loading...' : 'Tweet'}
             />
           </div>
         </div>
