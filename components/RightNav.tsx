@@ -5,29 +5,20 @@ import {
   childrenVariants,
   containerVariants,
 } from '../libs/client/animationVariants';
-
-interface IHashTag {
-  id: number;
-  tag: string;
-  createdAt: Date;
-  updatedAt: Date;
-  _count: {
-    tweets: number;
-  };
-}
+import { IHashtag } from '../types';
 
 export interface GetHashTagsResponse {
   ok: boolean;
   error?: string;
-  hashtags?: IHashTag[];
+  hashtags?: IHashtag[];
 }
 
 export default function RightNav() {
   const { data } = useSWR<GetHashTagsResponse>('/api/hashtags');
   return (
-    <nav className='w-full flex justify-start items-center h-full px-5'>
+    <nav className='w-full flex justify-start items-center py-10 pl-5'>
       <motion.ul
-        className='space-y-5 w-1/2'
+        className='space-y-5 w-1/2 '
         variants={containerVariants}
         initial='start'
         animate='end'

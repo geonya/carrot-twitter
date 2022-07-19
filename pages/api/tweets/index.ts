@@ -24,7 +24,7 @@ async function handler(
   if (req.method === 'POST') {
     try {
       const {
-        body: { tweetText, photo },
+        body: { tweetText, photo, originTweetId },
         session: { user },
       } = req;
       if (!user) {
@@ -40,6 +40,13 @@ async function handler(
               id: user.id,
             },
           },
+          ...(originTweetId && {
+            originTweet: {
+              connect: {
+                id: originTweetId,
+              },
+            },
+          }),
           ...(hashTagObjs.length > 0 && {
             hashtags: {
               connectOrCreate: hashTagObjs,

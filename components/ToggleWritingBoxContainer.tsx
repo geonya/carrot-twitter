@@ -1,15 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Dispatch, SetStateAction } from 'react';
-import { GetTweetsResponse } from '../types';
 import BlackOut from './BlackOut';
 import WritingBox from './WritingBox';
 interface ToggleWritingBoxContainerProps {
-  data?: GetTweetsResponse;
+  totalTweets?: number;
   writingModal: boolean;
   setWritingModal: Dispatch<SetStateAction<boolean>>;
 }
 export default function ToggleWritingBoxContainer({
-  data,
   writingModal,
   setWritingModal,
 }: ToggleWritingBoxContainerProps) {
@@ -48,7 +46,7 @@ export default function ToggleWritingBoxContainer({
               </svg>
             </div>
             <div className='w-full h-7' />
-            <WritingBox data={data} setWritingModal={setWritingModal} />
+            <WritingBox setWritingModal={setWritingModal} />
           </motion.div>
         </div>
       )}

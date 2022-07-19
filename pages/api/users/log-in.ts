@@ -9,9 +9,6 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<MutationResponseType>
 ) {
-  if (req.method === 'GET') {
-    console.log('GET');
-  }
   if (req.method === 'POST') {
     try {
       const {
@@ -40,5 +37,5 @@ async function handler(
 }
 
 export default withApiSession(
-  withHandler({ methods: ['POST', 'GET'], handler, isPrivate: false })
+  withHandler({ methods: ['POST'], handler, isPrivate: false })
 );

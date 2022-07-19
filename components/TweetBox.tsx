@@ -5,6 +5,8 @@ import useMutation from '../libs/client/useMutation';
 import AvatarContainer from './AvatarContainer';
 import TweetPhoto from './TweetPhoto';
 import { Tweet } from '@prisma/client';
+import Loading from './Loading';
+import { ITweet } from '../types';
 
 interface TweetProps {
   id: number;
@@ -19,7 +21,7 @@ interface TweetProps {
 }
 interface GetTweetMutation {
   ok: boolean;
-  tweet: Tweet;
+  tweet: ITweet;
   isLiked: boolean;
 }
 
@@ -31,10 +33,10 @@ export default function TweetBox({
   photo,
   likeCount,
 }: TweetProps) {
-  const { mutate } = useSWRConfig();
   const { data, mutate: tweetMutate } = useSWR<GetTweetMutation>(
     `/api/tweets/${id}`
   );
+
   const [likeMutation] = useMutation(`/api/tweets/${id}/like`);
   const onLikeClick = () => {
     if (!data) return;
@@ -49,31 +51,60 @@ export default function TweetBox({
         tweet: { ...prev.tweet, likeCount },
       };
     }, false);
-    mutate(`/api/users/me`, (prev: any) => ({ ...prev, ok: !prev.ok }), false);
     likeMutation({});
   };
 
-  return (
-    <motion.div className='grid grid-cols-[1fr_10fr] gap-4 p-5 pl-6'>
+  return data && data.ok && data.tweet ? (
+    <motion.div className='grid grid-cols-[1fr_10fr] gap-4 p-5 pl-6 pr-6 relative'>
       <Link href={`/users/${user?.username}`}>
         <div className='cursor-pointer'>
           <AvatarContainer url={user?.avatar} />
         </div>
       </Link>
       <div className='flex flex-col ml-1'>
-        <div className='flex items-center justify-between mb-4'>
+        <div className='flex items-end justify-start mb-4'>
           <Link href={`/users/${user?.username}`}>
-            <h4 className='font-bold text-base cursor-pointer'>
-              @{user?.username}
-            </h4>
+            <div className='flex items-center'>
+              <h4 className='font-bold text-base cursor-pointer'>
+                @{user?.username}
+              </h4>
+            </div>
           </Link>
-          <span className='font-thin text-zinc-400 text-xs'>
+          <span className='font-thin text-zinc-400 text-xs ml-4'>
             {createdAt ? String(createdAt)?.substring(0, 10) : 'Now'}
           </span>
         </div>
         <Link href={`/tweets/${id}`}>
+          <div className='absolute cursor-pointer top-0 right-0 w-0 h-0 border-t-[25px] border-t-blue-500 border-b-[25px] border-b-transparent border-r-[25px] border-r-blue-500 border-l-[25px] border-l-transparent'>
+            <span className='text-xs font-semibold absolute -top-4 -right-5'>
+              {id}
+            </span>
+          </div>
+        </Link>
+        <Link href={`/tweets/${id}`}>
           <a>
-            <div className='mb-5'>
+            <div className='mb-5 flex'>
+              {data.tweet.originTweetId && (
+                <Link href={`/tweets/${data.tweet.originTweetId}`}>
+                  <div className='text-blue-500 mr-2 flex items-center'>
+                    <svg
+                      className='w-5 h-5 mr-1'
+                      fill='none'
+                      stroke='currentColor'
+                      viewBox='0 0 24 24'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth='2'
+                        d='M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6'
+                      ></path>
+                    </svg>
+                    <span className=''>{data.tweet.originTweetId}</span>
+                  </div>
+                </Link>
+              )}
               <span className='text-base'>{tweetText}</span>
             </div>
             {photo ? <TweetPhoto url={photo} /> : null}
@@ -81,10 +112,10 @@ export default function TweetBox({
         </Link>
 
         <ul className='w-full flex items-center mt-5 space-x-5 text-zinc-500'>
-          {!data?.tweet?.originTweetId && (
+          <Link href={`/tweets/${id}`}>
             <li className='flex space-x-2 items-center cursor-pointer'>
               <svg
-                className='w-6 h-6'
+                className='w-5 h-5'
                 fill='none'
                 stroke='currentColor'
                 viewBox='0 0 24 24'
@@ -94,18 +125,20 @@ export default function TweetBox({
                   strokeLinecap='round'
                   strokeLinejoin='round'
                   strokeWidth='2'
-                  d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'
+                  d='M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6'
                 ></path>
               </svg>
-              <span>{data?.tweet?.reTweetCount}</span>
+              <span className='text-sm'>
+                {data.tweet._count?.reTweets || 0}
+              </span>
             </li>
-          )}
+          </Link>
           <li
             className='flex space-x-2 items-center cursor-pointer'
             onClick={onLikeClick}
           >
             <svg
-              className='w-6 h-6'
+              className='w-5 h-5'
               fill={data?.isLiked ? 'tomato' : 'none'}
               stroke={data?.isLiked ? 'tomato' : 'currentColor'}
               viewBox='0 0 24 24'
@@ -118,10 +151,14 @@ export default function TweetBox({
                 d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
               ></path>
             </svg>
-            <span>{data?.tweet?.likeCount || likeCount}</span>
+            <span className='text-sm'>
+              {data?.tweet?.likeCount || likeCount}
+            </span>
           </li>
         </ul>
       </div>
     </motion.div>
+  ) : (
+    <Loading />
   );
 }

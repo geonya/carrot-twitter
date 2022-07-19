@@ -9,21 +9,30 @@ import {
 import { useForm } from 'react-hook-form';
 import useMe from '../libs/client/useMe';
 import useMutation from '../libs/client/useMutation';
-import { ITweet, TweetFormValue, UploadTweetResponse } from '../types';
+import {
+  GetTweetResponse,
+  TweetFormValue,
+  UploadTweetResponse,
+} from '../types';
 import { AnimatePresence, motion } from 'framer-motion';
 import AvatarContainer from './AvatarContainer';
 import TweetPhoto from './TweetPhoto';
-import uploadFunction from '../libs/client/uploadFunction';
-import upLoadReTweetFn from '../libs/client/uploadReTweetFn';
+import tweetUploadFn from '../libs/client/tweetUploadFn';
+import useSWR from 'swr';
 
 interface WritingBoxProps {
-  tweets?: ITweet[];
+  originTweetData?: GetTweetResponse;
   setWritingModal?: Dispatch<SetStateAction<boolean>>;
   reTweet?: boolean;
 }
 
+interface TweetsCountResponse {
+  ok: boolean;
+  count: number;
+}
+
 export default function WritingBox({
-  tweets,
+  originTweetData,
   setWritingModal,
   reTweet = false,
 }: WritingBoxProps) {
@@ -32,39 +41,37 @@ export default function WritingBox({
     useForm<TweetFormValue>({
       mode: 'onChange',
     });
-
+  const fileWatch = watch('file');
   const [uploadPhoto, setUploadPhoto] = useState('');
+  const { data: totalTweetsData } =
+    useSWR<TweetsCountResponse>('/api/tweets/count');
   const [uploadTweet, { loading }] =
     useMutation<UploadTweetResponse>('/api/tweets');
 
-  const { uploadReTweet, loading: reTweetLoading } = upLoadReTweetFn(
-    tweets?.length! + 1
-  );
-
-  const fileWatch = watch('file');
-
   const onSubmitValid = async ({ tweetText }: TweetFormValue) => {
     if (loading) return;
-    if (!tweets) return;
     if (!myData?.myProfile) return;
+    if (!totalTweetsData) return;
+
     // new tweet obj
     const newTweetObj = {
-      id: tweets.length + 1,
+      id: totalTweetsData.count + 1,
       tweetText,
       photo: uploadPhoto,
+      ...(reTweet && { originTweetId: originTweetData?.tweet.id }),
       likeCount: 0,
+      reTweetCount: 0,
       user: {
-        id: myData.myProfile.id,
-        username: myData.myProfile.username,
-        avatar: myData.myProfile.avatar,
+        ...myData.myProfile,
       },
     };
-    await uploadFunction({
-      tweets,
+
+    await tweetUploadFn({
       newTweetObj,
       uploadTweet,
       fileWatch,
     });
+
     setValue('tweetText', '');
     setUploadPhoto('');
     if (setWritingModal) {
@@ -133,7 +140,11 @@ export default function WritingBox({
             <textarea
               {...rest}
               className='text-base bg-transparent w-[95%] placeholder:text-zinc-500 resize-none py-2 px-4 ml-1 border-[1px] border-zinc-700 rounded-3xl'
-              placeholder='무슨 일이 일어나고 있나요?'
+              placeholder={
+                !reTweet
+                  ? '무슨 일이 일어나고 있나요?'
+                  : '예쁜 의견 남겨주세요.'
+              }
               rows={1}
               maxLength={140}
               onInput={handleResizeHeight}
@@ -197,7 +208,7 @@ export default function WritingBox({
             <input
               className='bg-blue-500 px-6 py-1.5 rounded-full cursor-pointer font-bold text-sm'
               type='submit'
-              value={loading || reTweetLoading ? 'Loading...' : 'Tweet'}
+              value={loading ? 'Loading...' : 'Tweet'}
             />
           </div>
         </div>

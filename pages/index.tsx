@@ -6,6 +6,7 @@ import TweetsListContainer from '../components/TweetListContainer';
 import WritingBox from '../components/WritingBox';
 import { GetTweetsResponse } from '../types';
 import prisma from '../libs/server/prisma';
+import Loading from '../components/Loading';
 
 const Home: NextPage = () => {
   const { data } = useSWR<GetTweetsResponse>('/api/tweets');
@@ -14,10 +15,10 @@ const Home: NextPage = () => {
       <div className='divide-zinc-700 divide-y-[0.5px] divide-dashed'>
         <div className='min-h-[200px]'>
           <h1 className='font-bold text-xl p-5'>Home</h1>
-          {data && data.tweets && <WritingBox tweets={data.tweets} />}
+          {data && data.tweets && <WritingBox />}
         </div>
         {/* Load All Tweets */}
-        {data && <TweetsListContainer tweets={data.tweets} />}
+        {data ? <TweetsListContainer tweets={data.tweets} /> : <Loading />}
       </div>
     </Layout>
   );

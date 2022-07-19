@@ -6,6 +6,9 @@ interface MutationResponseType {
 }
 interface ITweet extends Tweet {
   user?: User;
+  _count: {
+    reTweets: number;
+  };
 }
 interface TweetFormValue {
   file?: FileList;
@@ -26,4 +29,22 @@ interface UploadTweetResponse {
   ok: boolean;
   error?: string;
   tweet: ITweet;
+}
+
+interface GetTweetResponse {
+  ok: boolean;
+  tweet: ITweet;
+  isLiked: boolean;
+}
+
+type NewTweetObjType = Partial<ITweet>;
+
+interface IHashtag {
+  id: number;
+  tag: string;
+  createdAt: Date;
+  updatedAt: Date;
+  _count: {
+    tweets: number;
+  };
 }

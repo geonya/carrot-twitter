@@ -27,7 +27,7 @@ interface EditProfileResponse {
   ok: boolean;
   error?: string;
 }
-interface UploadFunctionProps {
+interface ProfileUpdataFnProps {
   password?: string;
   bio?: string;
 }
@@ -44,7 +44,7 @@ export default function Profile() {
 
   const onValid = async ({ password, bio }: AvatarFormValue) => {
     if (!isMe) return;
-    await uploadFunction({ password, bio });
+    await profileUpdataFn({ password, bio });
   };
   const { mutate } = useSWRConfig();
   const { data } = useSWR<GetUserResponse>(
@@ -54,7 +54,7 @@ export default function Profile() {
     `/api/users/${router.query.username}`
   );
 
-  async function uploadFunction({ password, bio }: UploadFunctionProps) {
+  async function profileUpdataFn({ password, bio }: ProfileUpdataFnProps) {
     if (loading) return;
     if (fileWatch && fileWatch.length > 0) {
       const file = fileWatch[0];

@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }: any) {
           fetch(url).then((response) => response.json()),
       }}
     >
-      <div className='w-full mx-auto'>
+      <div className='w-full mx-auto overflow-scroll scrollbar-hide'>
         <Component {...pageProps} />
       </div>
     </SWRConfig>

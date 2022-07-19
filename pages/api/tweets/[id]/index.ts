@@ -21,8 +21,15 @@ async function handler(
         },
         include: {
           user: true,
+          reTweets: true,
+          _count: {
+            select: {
+              reTweets: true,
+            },
+          },
         },
       });
+
       const isLiked = Boolean(
         await prisma.like.findFirst({
           where: {

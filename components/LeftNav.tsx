@@ -1,17 +1,11 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { GetTweetsResponse } from '../types';
 import useMe from '../libs/client/useMe';
 import useMutation from '../libs/client/useMutation';
-import WritingBox from './WritingBox';
 import ToggleWritingBoxContainer from './ToggleWritingBoxContainer';
 
-interface LeftNavProps {
-  data?: GetTweetsResponse;
-}
-
-export default function LeftNav({ data }: LeftNavProps) {
+export default function LeftNav() {
   const router = useRouter();
   const { data: myData } = useMe();
   const [logout, { data: logoutResult, loading }] =
@@ -91,10 +85,10 @@ export default function LeftNav({ data }: LeftNavProps) {
           </span>
         </li>
         <ToggleWritingBoxContainer
-          data={data}
           writingModal={writingModal}
           setWritingModal={setWritingModal}
         />
+
         <li
           className='w-36 py-2 border-2 border-blue-500 rounded-full text-center cursor-pointer'
           onClick={onLogoutClick}
