@@ -62,6 +62,7 @@ export default function WritingBox({
       ...(reTweet && { originTweetId: originTweetData?.tweet.id }),
       likeCount: 0,
       reTweetCount: 0,
+      userId: myData.myProfile.id,
       user: {
         ...myData.myProfile,
       },
@@ -140,10 +141,10 @@ export default function WritingBox({
           <div className='flex items-center mb-4'>
             <textarea
               {...rest}
-              className='text-base bg-transparent w-[95%] placeholder:text-zinc-500 resize-none py-2 px-4 ml-1 border-[1px] border-zinc-700 rounded-3xl overflow-scroll scrollbar-hide'
+              className='text-base bg-transparent w-[95%] resize-none py-4 px-4 ml-2 border-[1px] border-zinc-700 rounded-3xl overflow-scroll scrollbar-hide'
               placeholder={
                 !reTweet
-                  ? '무슨 일이 일어나고 있나요?'
+                  ? '무슨 일이 일어나고 있나요? 🥕'
                   : '예쁜 의견 남겨주세요 😄'
               }
               rows={1}
