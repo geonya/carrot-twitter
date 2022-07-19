@@ -13,13 +13,11 @@ export default function LeftNav() {
     useMutation(`/api/users/log-out`);
   const [writingModal, setWritingModal] = useState(false);
   const onLogoutClick = () => {
-    if (loading) return;
     router.push('/log-in');
     logout({});
   };
   useEffect(() => {
     if (logoutResult?.ok) {
-      if (loading) return;
       router.push('/log-in');
     }
   }, [logoutResult, loading, router]);

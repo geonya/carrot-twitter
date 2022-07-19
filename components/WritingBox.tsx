@@ -140,7 +140,7 @@ export default function WritingBox({
           <div className='flex items-center mb-4'>
             <textarea
               {...rest}
-              className='text-base bg-transparent w-[95%] placeholder:text-zinc-500 resize-none py-2 px-4 ml-1 border-[1px] border-zinc-700 rounded-3xl'
+              className='text-base bg-transparent w-[95%] placeholder:text-zinc-500 resize-none py-2 px-4 ml-1 border-[1px] border-zinc-700 rounded-3xl overflow-scroll scrollbar-hide'
               placeholder={
                 !reTweet
                   ? '무슨 일이 일어나고 있나요?'
