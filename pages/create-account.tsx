@@ -5,11 +5,13 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import useMutation from '../libs/client/useMutation';
 import AuthLayout from '../components/AuthLayout';
+import Loading from '../components/Loading';
 
 interface CreateAccountForm {
   email: string;
   username: string;
   password: string;
+  result?: string;
 }
 interface CreateAccountResponse {
   ok: boolean;
@@ -20,7 +22,14 @@ const CreateAccount: NextPage = () => {
   const router = useRouter();
   const [createAccount, { data, loading }] =
     useMutation<CreateAccountResponse>('/api/users/sign-up');
-  const { register, handleSubmit, getValues } = useForm<CreateAccountForm>();
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    setError,
+    formState: { errors },
+    getValues,
+  } = useForm<CreateAccountForm>({ mode: 'onChange' });
   const onValid = (data: CreateAccountForm) => {
     if (loading) return;
     createAccount({ ...data });
@@ -36,9 +45,9 @@ const CreateAccount: NextPage = () => {
       });
     }
     if (data?.error) {
-      alert(data.error);
+      setError('result', { message: data?.error });
     }
-  }, [data, router, getValues]);
+  }, [data, router, getValues, setError]);
   return (
     <AuthLayout pageTitle='Sign Up'>
       <div className='space-y-14'>
@@ -56,34 +65,84 @@ const CreateAccount: NextPage = () => {
         onSubmit={handleSubmit(onValid)}
       >
         <input
-          className='auth-input'
+          className={`auth-input ${
+            errors.username && 'focus:ring-red-500 focus:border-red-500'
+          }`}
           type='text'
-          {...register('username', { required: 'Please Write username' })}
+          {...register('username', {
+            required: '이름을 입력해주세요.',
+            minLength: {
+              value: 2,
+              message: '2~10자 이내에 영문이나 숫자만 사용 가능합니다.',
+            },
+            maxLength: {
+              value: 10,
+              message: '2~10자 이내에 영문이나 숫자만 사용 가능합니다.',
+            },
+            pattern: {
+              value: /^[a-z0-9]{2,10}$/g,
+              message: '2~10자 이내에 영문이나 숫자만 사용 가능합니다.',
+            },
+            onChange: () => clearErrors('result'),
+          })}
           placeholder='Username'
         />
+        <span className='auth-error'>{errors.username?.message}</span>
         <input
-          className='auth-input'
+          className={`auth-input ${
+            errors.email && 'focus:ring-red-500 focus:border-red-500'
+          }`}
           type='text'
-          {...register('email', { required: 'Please Write username' })}
+          {...register('email', {
+            required: '이메일을 입력해주세요.',
+            pattern: {
+              value:
+                /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+              message: '이메일이 형식에 맞지 않습니다.',
+            },
+            onChange: () => {
+              clearErrors('result');
+            },
+          })}
           placeholder='E-Mail'
         />
+        <span className='auth-error'>{errors.email?.message}</span>
         <input
-          className='auth-input'
+          className={`auth-input ${
+            errors.password && 'focus:ring-red-500 focus:border-red-500'
+          }`}
           type='password'
-          {...register('password', { required: 'Please Write password' })}
+          {...register('password', {
+            required: '비밀번호를 입력해주세요.',
+            minLength: {
+              value: 4,
+              message: '비밀번호는 최소 4자 이상이여야 합니다.',
+            },
+            onChange: () => clearErrors('result'),
+          })}
           placeholder='Password'
           autoComplete='on'
         />
-        <input
-          className='auth-input bg-blue-500 text-white cursor-pointer'
-          type='submit'
-          value={loading ? 'Loading...' : '가입하기'}
-        />
+        <span className='auth-error'>{errors.password?.message}</span>
+        {!loading ? (
+          <>
+            <input
+              className='auth-input bg-blue-500 text-white cursor-pointer'
+              type='submit'
+              value={loading ? 'Loading...' : '가입하기'}
+            />
+            <span className='auth-error'>{errors.result?.message}</span>
+          </>
+        ) : (
+          <div className='auth-input bg-blue-500 cursor-pointer'>
+            <Loading white />
+          </div>
+        )}
       </form>
       <div className='w-full mt-10 space-y-5'>
         <h4 className='text-white font-bold'>이미 트위터에 가입하셨나요?</h4>
         <Link href='/log-in'>
-          <div className='auth-input border border-blue-500 text-blue-500 cursor-pointer text-center'>
+          <div className='auth-input py-2 border-2 border-blue-500 text-blue-500 cursor-pointer text-center font-bold'>
             <span>로그인</span>
           </div>
         </Link>

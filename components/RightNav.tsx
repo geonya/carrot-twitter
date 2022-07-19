@@ -6,6 +6,7 @@ import {
   containerVariants,
 } from '../libs/client/animationVariants';
 import { IHashtag } from '../types';
+import Loading from './Loading';
 
 export interface GetHashTagsResponse {
   ok: boolean;
@@ -23,7 +24,7 @@ export default function RightNav() {
         initial='start'
         animate='end'
       >
-        {data &&
+        {data ? (
           data.hashtags &&
           data.hashtags.map((hashtag, i) => (
             <Link href={`/hashtags/${hashtag.tag}`} key={i}>
@@ -36,7 +37,12 @@ export default function RightNav() {
                 </span>
               </motion.li>
             </Link>
-          ))}
+          ))
+        ) : (
+          <div className='h-screen'>
+            <Loading big />
+          </div>
+        )}
       </motion.ul>
     </nav>
   );

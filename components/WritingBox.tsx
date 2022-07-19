@@ -19,6 +19,7 @@ import AvatarContainer from './AvatarContainer';
 import TweetPhoto from './TweetPhoto';
 import tweetUploadFn from '../libs/client/tweetUploadFn';
 import useSWR from 'swr';
+import Loading from './Loading';
 
 interface WritingBoxProps {
   originTweetData?: GetTweetResponse;
@@ -65,18 +66,18 @@ export default function WritingBox({
         ...myData.myProfile,
       },
     };
+    setUploadPhoto('');
+    setValue('tweetText', '');
+
+    if (setWritingModal) {
+      setWritingModal(false);
+    }
 
     await tweetUploadFn({
       newTweetObj,
       uploadTweet,
       fileWatch,
     });
-
-    setValue('tweetText', '');
-    setUploadPhoto('');
-    if (setWritingModal) {
-      setWritingModal(false);
-    }
     reset();
   };
   useEffect(() => {
@@ -205,11 +206,17 @@ export default function WritingBox({
                     ></path>
                   </svg> */}
             </div>
-            <input
-              className='bg-blue-500 px-6 py-1.5 rounded-full cursor-pointer font-bold text-sm'
-              type='submit'
-              value={loading ? 'Loading...' : 'Tweet'}
-            />
+            {!loading ? (
+              <input
+                className='bg-blue-500 w-24 h-9 rounded-full cursor-pointer font-bold text-sm'
+                type='submit'
+                value={loading ? 'Loading...' : 'Tweet'}
+              />
+            ) : (
+              <div className='bg-blue-500 w-24 h-9 rounded-full cursor-pointer'>
+                <Loading white />
+              </div>
+            )}
           </div>
         </div>
       </form>

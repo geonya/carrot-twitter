@@ -10,7 +10,7 @@ export const containerVariants: Variants = {
     opacity: 1,
     transition: {
       type: 'tween',
-      delay: -0.5,
+      delay: -1,
       duration: 0.1,
       delayChildren: 0.1,
       staggerChildren: 0.2,

@@ -20,7 +20,7 @@ export default function Layout({ pageTitle, children }: LayoutProps) {
         <LeftNav />
       </section>
       <section className='sm:min-w-[500px] min-w-[375px] overflow-scroll scrollbar-hide'>
-        <MainSection children={children} />
+        <MainSection>{children}</MainSection>
       </section>
       <section className='md:block hidden overflow-scroll scrollbar-hide'>
         <RightNav />

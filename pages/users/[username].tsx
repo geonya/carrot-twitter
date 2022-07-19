@@ -121,7 +121,7 @@ export default function Profile() {
   return (
     <Layout pageTitle='My Profile'>
       {!data ? (
-        <Loading />
+        <Loading big />
       ) : !data.ok || !data.user ? (
         <NotFound />
       ) : (
@@ -173,11 +173,17 @@ export default function Profile() {
               />
               {isMe && (
                 <>
-                  <input
-                    className='w-3/5 px-5 py-2 rounded-full bg-blue-500 text-white cursor-pointer'
-                    type='submit'
-                    value={loading ? 'Loading...' : '수정하기'}
-                  />
+                  {!loading ? (
+                    <input
+                      className='w-3/5 px-5 py-2 rounded-full bg-blue-500 text-white cursor-pointer'
+                      type='submit'
+                      value={'수정하기'}
+                    />
+                  ) : (
+                    <div className='w-3/5 px-5 py-2 rounded-full bg-blue-500 text-white cursor-pointer'>
+                      <Loading white />
+                    </div>
+                  )}
                 </>
               )}
             </form>

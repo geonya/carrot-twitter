@@ -21,7 +21,6 @@ async function handler(
         },
         include: {
           user: true,
-          reTweets: true,
           _count: {
             select: {
               reTweets: true,
@@ -45,11 +44,14 @@ async function handler(
       return res.json({ ok: false, error });
     }
   }
+  if (req.method === 'POST') {
+    console.error('POST');
+  }
 }
 
 export default withApiSession(
   withHandler({
-    methods: ['GET'],
+    methods: ['GET', 'POST'],
     handler,
   })
 );

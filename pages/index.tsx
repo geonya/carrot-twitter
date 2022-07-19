@@ -15,7 +15,7 @@ const Home: NextPage = () => {
       <div className='divide-zinc-700 divide-y-[0.5px] divide-dashed'>
         <div className='min-h-[200px]'>
           <h1 className='font-bold text-xl p-5'>Home</h1>
-          {data && data.tweets && <WritingBox />}
+          {data && <WritingBox />}
         </div>
         {/* Load All Tweets */}
         {data ? <TweetsListContainer tweets={data.tweets} /> : <Loading />}

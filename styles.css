@@ -8,6 +8,9 @@ body {
 }
 @layer components {
   .auth-input {
-    @apply w-5/6 max-w-[340px] px-5 py-2 rounded-full;
+    @apply appearance-none pl-7 w-5/6 max-w-[340px] px-5 py-1.5 border-4 border-transparent rounded-full focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+  }
+  .auth-error {
+    @apply w-5/6 max-w-[340px] text-sm text-center text-red-500 font-semibold;
   }
 }

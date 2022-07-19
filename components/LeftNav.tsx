@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import useMe from '../libs/client/useMe';
 import useMutation from '../libs/client/useMutation';
+import Loading from './Loading';
 import ToggleWritingBoxContainer from './ToggleWritingBoxContainer';
 
 export default function LeftNav() {
@@ -77,7 +78,7 @@ export default function LeftNav() {
           </li>
         </Link>
         <li
-          className='w-36 py-2 bg-blue-500 rounded-full text-center cursor-pointer'
+          className='w-36 h-10 bg-blue-500 rounded-full cursor-pointer grid place-content-center'
           onClick={() => setWritingModal(true)}
         >
           <span className='lg:text-lg md:text-base text-base font-semibold'>
@@ -88,15 +89,20 @@ export default function LeftNav() {
           writingModal={writingModal}
           setWritingModal={setWritingModal}
         />
-
-        <li
-          className='w-36 py-2 border-2 border-blue-500 rounded-full text-center cursor-pointer'
-          onClick={onLogoutClick}
-        >
-          <span className='text-blue-500 lg:text-lg md:text-base text-base font-semibold'>
-            Log Out
-          </span>
-        </li>
+        {!loading ? (
+          <li
+            className='w-36 h-10 border-2 border-blue-500 rounded-full cursor-pointer grid place-content-center'
+            onClick={onLogoutClick}
+          >
+            <span className='text-blue-500 lg:text-lg md:text-base text-base font-semibold'>
+              Log Out
+            </span>
+          </li>
+        ) : (
+          <div className='w-36 h-10 border-2 border-blue-500 rounded-full cursor-pointer grid place-content-center'>
+            <Loading />
+          </div>
+        )}
       </ul>
     </nav>
   );

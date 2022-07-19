@@ -4,6 +4,7 @@ import {
   containerVariants,
 } from '../libs/client/animationVariants';
 import { ITweet } from '../types';
+import Loading from './Loading';
 import TweetBox from './TweetBox';
 
 interface TweetsListContainerProps {
@@ -15,14 +16,17 @@ export default function TweetsListContainer({
   tweets,
   reTweet = false,
 }: TweetsListContainerProps) {
+  const loading = !tweets;
   return (
     <motion.div
-      className='divide-zinc-700 divide-y-[0.5px] divide-dashed'
+      className={`${
+        loading ?? 'divide-zinc-700 divide-y-[0.5px] divide-dashed'
+      }`}
       variants={containerVariants}
       initial='start'
       animate='end'
     >
-      {tweets &&
+      {tweets ? (
         tweets.map((tweet, i) => (
           <motion.div
             key={i}
@@ -50,7 +54,10 @@ export default function TweetsListContainer({
             )}
             <TweetBox {...tweet} />
           </motion.div>
-        ))}
+        ))
+      ) : (
+        <Loading />
+      )}
     </motion.div>
   );
 }

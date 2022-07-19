@@ -4,11 +4,13 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthLayout from '../components/AuthLayout';
+import Loading from '../components/Loading';
 import useMutation from '../libs/client/useMutation';
 
 interface LoginFormValues {
   username: string;
   password: string;
+  result?: string;
 }
 interface LoginResponse {
   ok: boolean;
@@ -18,7 +20,13 @@ const LogIn: NextPage = () => {
   const router = useRouter();
   const [loginMutation, { data, loading }] =
     useMutation<LoginResponse>('/api/users/log-in');
-  const { register, handleSubmit } = useForm<LoginFormValues>({
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    setError,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
     defaultValues: {
       username: router.query?.username ? (router.query.username as string) : '',
       password: router.query?.password ? (router.query.password as string) : '',
@@ -35,8 +43,11 @@ const LogIn: NextPage = () => {
     if (data?.ok) {
       if (loading) return;
       router.push('/');
+    } else if (!data?.ok && data?.error) {
+      setError('result', { message: data?.error });
     }
-  }, [data, router]);
+  }, [data, router, loading]);
+
   return (
     <AuthLayout pageTitle='로그인'>
       <div className='space-y-14'>
@@ -59,28 +70,65 @@ const LogIn: NextPage = () => {
         onSubmit={handleSubmit(onValid)}
       >
         <input
-          className='auth-input'
+          className={`auth-input ${
+            errors.username && 'focus:ring-red-400 focus:border-red-400'
+          }`}
           type='text'
-          {...register('username', { required: 'Please Write username' })}
+          {...register('username', {
+            required: '이름을 입력해주세요.',
+            minLength: {
+              value: 2,
+              message: '2~10자 이내에 영문이나 숫자만 사용 가능합니다.',
+            },
+            maxLength: {
+              value: 10,
+              message: '2~10자 이내에 영문이나 숫자만 사용 가능합니다.',
+            },
+            pattern: {
+              value: /^[a-z0-9]{2,10}$/g,
+              message: '2~10자 이내에 영문이나 숫자만 사용 가능합니다.',
+            },
+            onChange: () => clearErrors('result'),
+          })}
           placeholder='Username'
         />
+        <span className='auth-error'>{errors.username?.message}</span>
         <input
-          className='auth-input'
+          className={`auth-input  ${
+            errors.password && 'focus:ring-red-500 focus:border-red-500'
+          }`}
           type='password'
-          {...register('password', { required: 'Please Write password' })}
+          {...register('password', {
+            required: '비밀번호를 입력해주세요.',
+            minLength: {
+              value: 4,
+              message: '비밀번호는 최소 4자 이상이여야 합니다.',
+            },
+            onChange: () => clearErrors('result'),
+          })}
           autoComplete='on'
           placeholder='Password'
         />
-        <input
-          className='auth-input bg-blue-500 text-white cursor-pointer'
-          type='submit'
-          value={loading ? 'Loading...' : '로그인'}
-        />
+        <span className='auth-error'>{errors.password?.message}</span>
+        {!loading ? (
+          <>
+            <input
+              className='auth-input bg-blue-500 text-white cursor-pointer'
+              type='submit'
+              value={loading ? 'Loading...' : '로그인'}
+            />
+            <span className='auth-error'>{errors.result?.message}</span>
+          </>
+        ) : (
+          <div className='auth-input bg-blue-500 cursor-pointer'>
+            <Loading white />
+          </div>
+        )}
       </form>
       <div className='w-full mt-10 space-y-5'>
         <h4 className='text-white font-bold'>처음 이신가요?</h4>
         <Link href='/create-account'>
-          <div className='auth-input border border-blue-500 text-blue-500 cursor-pointer text-center'>
+          <div className='auth-input py-2 border-2 border-blue-500 text-blue-500 cursor-pointer text-center font-bold'>
             <span>가입하기</span>
           </div>
         </Link>

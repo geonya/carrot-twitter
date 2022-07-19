@@ -158,6 +158,8 @@ export default function TweetBox({
       </div>
     </motion.div>
   ) : (
-    <Loading />
+    <div className='w-full py-10'>
+      <Loading />
+    </div>
   );
 }
