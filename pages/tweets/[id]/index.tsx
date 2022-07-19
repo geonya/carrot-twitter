@@ -1,12 +1,12 @@
 import { GetServerSideProps, NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import Layout from '../../components/Layout';
-import Loading from '../../components/Loading';
-import TweetBox from '../../components/TweetBox';
-import TweetsListContainer from '../../components/TweetListContainer';
-import WritingBox from '../../components/WritingBox';
-import { GetTweetResponse, GetTweetsResponse } from '../../types';
+import Layout from '../../../components/Layout';
+import Loading from '../../../components/Loading';
+import TweetBox from '../../../components/TweetBox';
+import TweetsListContainer from '../../../components/TweetListContainer';
+import WritingBox from '../../../components/WritingBox';
+import { GetTweetResponse, GetTweetsResponse } from '../../../types';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query } = context;

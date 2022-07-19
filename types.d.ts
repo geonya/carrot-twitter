@@ -22,6 +22,7 @@ interface ITweet {
 interface TweetFormValue {
   file?: FileList;
   tweetText: string;
+  result?: string;
 }
 
 interface GetTweetsResponse {
@@ -44,6 +45,7 @@ interface GetTweetResponse {
   ok: boolean;
   tweet: ITweet;
   isLiked: boolean;
+  error?: string;
 }
 
 type NewTweetObjType = Partial<ITweet>;

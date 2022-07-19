@@ -79,7 +79,7 @@ export default function TweetBox({
         </Link>
         <Link href={`/tweets/${id}`}>
           <a>
-            <div className='mb-5 flex'>
+            <div className='my-5 flex'>
               {data.tweet.originTweetId && (
                 <Link href={`/tweets/${data.tweet.originTweetId}`}>
                   <div className='text-blue-500 mr-2 flex items-center'>
@@ -103,7 +103,9 @@ export default function TweetBox({
               )}
               <span className='text-base'>{tweetText}</span>
             </div>
-            {photo ? <TweetPhoto url={photo} /> : null}
+            <div className='my-5'>
+              {photo ? <TweetPhoto url={photo} /> : null}
+            </div>
           </a>
         </Link>
 
