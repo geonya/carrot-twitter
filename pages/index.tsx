@@ -18,7 +18,7 @@ const Home: NextPage = () => {
           {data && <WritingBox />}
         </div>
         {/* Load All Tweets */}
-        {data ? <TweetsListContainer tweets={data.tweets} /> : <Loading />}
+        {data ? <TweetsListContainer tweetsData={data} /> : <Loading />}
       </div>
     </Layout>
   );

@@ -27,6 +27,7 @@ interface TweetFormValue {
 
 interface GetTweetsResponse {
   ok: boolean;
+  error?: string;
   tweets: ITweet[];
 }
 

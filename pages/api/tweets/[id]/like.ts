@@ -8,6 +8,26 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<MutationResponseType>
 ) {
+  if (req.method === 'GET') {
+    const {
+      query: { id },
+      session: { user },
+    } = req;
+    if (!id) return res.json({ ok: false, error: 'no id' });
+    if (!user) return res.json({ ok: false, error: 'not authorized' });
+    const tweetId = +id.toString();
+    const like = await prisma.like.findFirst({
+      where: {
+        userId: user.id,
+        tweetId: tweetId,
+      },
+    });
+    if (like) {
+      return res.json({ ok: true, isLiked: true });
+    } else {
+      return res.json({ ok: true, isLiked: false });
+    }
+  }
   if (req.method === 'POST') {
     try {
       const {
@@ -79,7 +99,7 @@ async function handler(
 
 export default withApiSession(
   withHandler({
-    methods: ['POST'],
+    methods: ['GET', 'POST'],
     handler,
   })
 );

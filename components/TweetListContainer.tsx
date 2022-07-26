@@ -1,33 +1,43 @@
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import {
   childrenVariants,
   containerVariants,
 } from '../libs/client/animationVariants';
-import { ITweet } from '../types';
+import { GetTweetsResponse } from '../types';
 import Loading from './Loading';
 import TweetBox from './TweetBox';
 
 interface TweetsListContainerProps {
-  tweets: ITweet[];
+  tweetsData: GetTweetsResponse;
   reTweet?: boolean;
 }
 
 export default function TweetsListContainer({
-  tweets,
+  tweetsData,
   reTweet = false,
 }: TweetsListContainerProps) {
-  const loading = !tweets;
+  const [listLoading, setListLoading] = useState(false);
+  useEffect(() => {
+    if (!tweetsData || !tweetsData.ok || tweetsData.error) {
+      setListLoading(true);
+    } else {
+      setListLoading(false);
+    }
+  }, [tweetsData]);
+  if (listLoading) return <Loading big />;
+
   return (
     <motion.div
       className={`${
-        loading ?? 'divide-zinc-700 divide-y-[0.5px] divide-dashed'
+        listLoading ?? 'divide-zinc-700 divide-y-[0.5px] divide-dashed'
       }`}
       variants={containerVariants}
       initial='start'
       animate='end'
     >
-      {tweets ? (
-        tweets.map((tweet, i) => (
+      {tweetsData.tweets ? (
+        tweetsData.tweets.map((tweet, i) => (
           <motion.div
             key={i}
             variants={childrenVariants}
@@ -52,11 +62,11 @@ export default function TweetsListContainer({
                 </div>
               </div>
             )}
-            <TweetBox {...tweet} />
+            <TweetBox tweet={tweet} />
           </motion.div>
         ))
       ) : (
-        <Loading />
+        <Loading big />
       )}
     </motion.div>
   );
